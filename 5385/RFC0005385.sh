@@ -55,18 +55,19 @@ else
 	chmod +x /usr/bin/wkhtmltopdf
 	cd /var/www/tools/
 	sudo tar -xvf ffmpeg-release-64bit-static.tar.xz
-	cd ffmpeg-2.7.2-64bit-static/
+	cd ffmpeg-2.7.2-64bit-static
 	sudo rm /usr/bin/ffmpeg
 	sudo ln ffmpeg /usr/bin/ffmpeg
 	sudo cp -r wowza/conf /usr/local/WowzaStreamingEngine
-	 
-	 
-	crontab -e
-
-	replace contents with:
-	*/5 * * * * sudo php /var/www/v3/app/console recorder:outdated:delete
-	*/5 * * * * sudo php /var/www/v3/app/console recorder:scheduled:run
-	*/2 * * * * sudo php /var/www/v3/app/console recorder:unrecord:stop
+	
+	###
+	# New Cron File
+	###
+	echo "*/5 * * * * sudo php /var/www/v3/app/console recorder:outdated:delete" >> newCron
+	echo "*/5 * * * * sudo php /var/www/v3/app/console recorder:scheduled:run" >> newCron
+	echo "*/2 * * * * sudo php /var/www/v3/app/console recorder:unrecord:stop" >> newCron
+	crontab newCron
+	rm newCron
 
 
 	sudo nano /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
