@@ -1,4 +1,5 @@
 #!/bin/bash
+sudo -s
 
 export patchDir="/home/ivsadmin/Install1022";
 export patchZip="/home/ivsadmin/Install1022.zip";
