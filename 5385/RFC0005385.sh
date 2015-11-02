@@ -22,17 +22,18 @@ else
 	mkdir /home/ivsadmin/RFC0005385/wowza
 
 	cp -fR /var/www/tools /home/ivsadmin/RFC0005385/apache/tools
-	cp -fR /var/www/tools /home/ivsadmin/RFC0005385/apache/tools/v3
+	cp -fR /var/www/v3 /home/ivsadmin/RFC0005385/apache/tools/v3
 	cp -fR /usr/local/WowzaStreamingEngine/conf/* /home/ivsadmin/RFC0005385/wowza
 
 	###
 	# Stop Services
 	###
-
-	while [ pgrep WowzaStreamingEngine -a pgrep apache2 ];
+	$counter=0;
+	while [ pgrep WowzaStreamingEngine -a pgrep apache2 -a $counter -ge 3 ];
 	do
 		sudo service WowzaStreamingEngine stop
 		sudo service apache2 stop
+		counter++
 		sleep 2
 	done
 
