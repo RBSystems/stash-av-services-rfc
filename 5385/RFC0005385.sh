@@ -3,16 +3,15 @@
 $patchDir = "/home/ivsadmin/Install1022";
 $patchZip = "/home/ivsadmin/Install1022.zip";
 
-if [ ! -d $patchDir]
-	then
-	if [ -f $patchZip] then
+if [ ! -d $patchDir];then
+	if [ -f $patchZip]; then
 		tar -xvf $patchZip
 	else
 		echo "Patch files are not present. Please download the patch to /home/ivsadmin ."
 		exit 1
 	fi
 else
-	
+
 	###
 	# Backups
 	###
@@ -26,8 +25,26 @@ else
 	cp -fR /usr/local/WowzaStreamingEngine/conf/* /home/ivsadmin/RFC0005385/wowza
 
 	###
+	# Stop Services
+	###
+
+	while [ pgrep WowzaStreamingEngine ]
+	do
+		sudo service WowzaStreamingEngine stop
+		sleep 2
+	done
+
+	while [ pgrep apache2 ]
+	do
+		sudo service apache2 stop
+		sleep 2
+	done
+
+	###
 	# Apply Patch
 	###
+
+	cd $patchDir
 
 	sudo cp -r wowza/conf /usr/local/WowzaStreamingEngine
 
@@ -69,3 +86,4 @@ else
 
 
 fi
+
