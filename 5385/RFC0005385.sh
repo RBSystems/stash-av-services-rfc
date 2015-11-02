@@ -2,6 +2,7 @@
 
 $patchDir = "/home/ivsadmin/Install1022";
 $patchZip = "/home/ivsadmin/Install1022.zip";
+$counter = 0;
 
 if [ ! -d $patchDir];then
 	if [ -f $patchZip]; then
@@ -28,14 +29,9 @@ else
 	# Stop Services
 	###
 
-	while [ pgrep WowzaStreamingEngine ]
+	while [ pgrep WowzaStreamingEngine -a pgrep apache2 ];
 	do
 		sudo service WowzaStreamingEngine stop
-		sleep 2
-	done
-
-	while [ pgrep apache2 ]
-	do
 		sudo service apache2 stop
 		sleep 2
 	done
@@ -84,6 +80,22 @@ else
 	# Verify
 	###
 
+	while [ ! pgrep WowzaStreamingEngine -a $counter -le 3 ];
+	do
+		sudo service WowzaStreamingEngine stop
+		sudo service WowzaStreamingEngine start
+		counter++;
+		sleep 10
+	done
 
+	### Failure
+	if [! pgrep WowzaStreamingEngine ];
+		then
+		echo "PATCH FAILED! ROLLBACK INITIATED";
+		sh Rollback_RFC0005385.sh & ;
+	else
+	### Success
+		echo "PATCH APPLIED SUCCESSFULLY";
+	fi
 fi
 
