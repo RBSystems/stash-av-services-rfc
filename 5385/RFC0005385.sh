@@ -3,6 +3,7 @@
 $patchDir = "/home/ivsadmin/Install1022";
 $patchZip = "/home/ivsadmin/Install1022.zip";
 $counter = 0;
+$IP = `ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`;
 
 if [ ! -d $patchDir];then
 	if [ -f $patchZip]; then
@@ -24,6 +25,7 @@ else
 	cp -fR /var/www/tools /home/ivsadmin/RFC0005385/apache/tools
 	cp -fR /var/www/v3 /home/ivsadmin/RFC0005385/apache/tools/v3
 	cp -fR /usr/local/WowzaStreamingEngine/conf/* /home/ivsadmin/RFC0005385/wowza
+	crontab -l > /home/ivsadmin/RFC0005385/crontab.bak
 
 	###
 	# Stop Services
@@ -69,10 +71,16 @@ else
 	crontab newCron
 	rm newCron
 
+	###
+	# Replace protocol & IP in wowza settings
+	###
 
-	sudo nano /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
-	#Replace protocol & IP
-
+	sed -i 's/192.168.0.99/$IP/' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
+	sed -i 's/192.168.0.99/$IP/' /var/www/dustin/web/wowza_conf/url
+	
+	#sed -i 's/http/https/' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
+	
+	
 	sudo -s
 	cd /var/www/v3
 	sh assets.sh
@@ -86,7 +94,7 @@ else
 	do
 		sudo service WowzaStreamingEngine stop
 		sudo service WowzaStreamingEngine start
-		counter++;
+		counter++
 		sleep 10
 	done
 
