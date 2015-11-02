@@ -37,18 +37,18 @@ export IP=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | aw
 	cp -fR /usr/local/WowzaStreamingEngine/conf/* /home/ivsadmin/RFC0005385/wowza
 	crontab -l > /home/ivsadmin/RFC0005385/crontab.bak
 
-####	###
-####	# Stop Services
-####	###
-####	$counter=0;
-####	while [ pgrep WowzaStreamingEngine -a pgrep apache2 -a $counter -ge 3 ];
-####	do
-####		sudo service WowzaStreamingEngine stop
-####		sudo service apache2 stop
-####		counter++
-####		sleep 2
-####	done
-####
+	###
+	# Stop Services
+	###
+	$counter=0;
+	while [ pgrep WowzaStreamingEngine -a pgrep apache2 -a $counter -ge 3 ];
+	do
+		sudo service WowzaStreamingEngine stop
+		sudo service apache2 stop
+		counter++
+		sleep 2
+	done
+
 ####	###
 ####	# Apply Patch
 ####	###
