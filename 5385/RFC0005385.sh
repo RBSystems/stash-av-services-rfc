@@ -5,14 +5,18 @@ export patchZip="/home/ivsadmin/Install1022.zip";
 export counter=0;
 export IP=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`;
 
-if [ ! -d $patchDir ]; then
-	if [ -f $patchZip ]; then
-		tar -xvf $patchZip
-	else
-		echo "Patch files are not present. Please download the patch to /home/ivsadmin ."
-		exit 1
-	fi
-else
+#if [ ! -d $patchDir ]; then
+#	if [ -f $patchZip ]; then
+#		tar -xvf $patchZip
+#	else
+#		if [ -f ".\Install1022.zip" ]; then
+#			cp -fR ".\Install1022.zip" $patchZip
+#		else
+#			echo "Patch files are not present. Please download the patch to /home/ivsadmin ."
+#			exit 1
+#		fi
+#	fi
+#else
 
 	###
 	# Backups
@@ -112,5 +116,5 @@ else
 ####	### Success
 ####		echo "PATCH APPLIED SUCCESSFULLY";
 ####	fi
-fi
+#fi
 
