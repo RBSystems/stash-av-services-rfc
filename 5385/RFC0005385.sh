@@ -1,7 +1,7 @@
 #!/bin/bash
 export patchDir="/home/ivsadmin/RFC0005385/Install1022";
 export patchZip="/home/ivsadmin/RFC0005385/Install1022.zip";
-export IP=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`;
+#export IP=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`;
 
 if [ ! -d $patchDir ]; then
 	if [ -f $patchZip ]; then
@@ -106,6 +106,8 @@ else
 	###
 	# Replace protocol & IP in wowza settings
 	###
+	export IP=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`;
+
 	sudo sed -i 's/192.168.0.99/$IP/' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
 	sudo sed -i 's/valt_recordings/dustin_recordings/' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
 	sudo sed -i 's/http:/https:/' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
