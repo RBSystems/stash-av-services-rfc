@@ -51,7 +51,7 @@ export IP=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | aw
 		sleep 2;
 	fi
 
-	export counter=0;
+	$counter=0;
 
 	if [ $(ps -ef | grep -v grep | grep "apache2" | wc -l) -gt 0 ]; then
 		if [ $counter -eq 10 ]; then
@@ -61,13 +61,13 @@ export IP=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | aw
 		service apache2 stop;
 		$counter=$counter+1;
 		sleep 2;
-	done
+	fi
 
-####	###
-####	# Apply Patch
-####	###
-####
-####	cd $patchDir
+	###
+	# Apply Patch
+	###
+
+	cd $patchDir
 ####
 ####	sudo cp -r wowza/conf /usr/local/WowzaStreamingEngine
 ####
