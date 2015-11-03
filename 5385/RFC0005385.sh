@@ -5,7 +5,7 @@ export IP=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | aw
 
 if [ ! -d $patchDir ]; then
 	if [ -f $patchZip ]; then
-		unzip $patchZip -d $patchDir && ls
+		unzip $patchZip && ls
 	else
 		if [ -f ".\Install1022.zip" ]; then
 			cp -fR ".\Install1022.zip" $patchZip
@@ -67,15 +67,13 @@ else
 	# Apply Patch
 	###
 
-	cd $patchDir
+####	sudo cp -r ./Install1022/wowza/conf /usr/local/WowzaStreamingEngine
 ####
-####	sudo cp -r wowza/conf /usr/local/WowzaStreamingEngine
-####
-####	sudo cp -r wowza/lib /usr/local/WowzaStreamingEngine
-####	sudo cp -r etc/php5 /etc
-####	sudo cp -r etc/rc.local /etc
-####	sudo cp -r v3 /var/www/
-####	sudo cp -r tools /var/www/
+####	sudo cp -r ./Install1022/Install1022/wowza/lib /usr/local/WowzaStreamingEngine
+####	sudo cp -r ./Install1022/etc/php5 /etc
+####	sudo cp -r ./Install1022/etc/rc.local /etc
+####	sudo cp -r ./Install1022/v3 /var/www/
+####	sudo cp -r ./Install1022/tools /var/www/
 ####
 ####	sudo ln -s /var/www/v3/vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64 /usr/bin/wkhtmltopdf
 ####	chmod +x /usr/bin/wkhtmltopdf
@@ -84,7 +82,7 @@ else
 ####	cd ffmpeg-2.7.2-64bit-static
 ####	sudo rm /usr/bin/ffmpeg
 ####	sudo ln ffmpeg /usr/bin/ffmpeg
-####	sudo cp -r wowza/conf /usr/local/WowzaStreamingEngine
+####	sudo cp -r ./Install1022/wowza/conf /usr/local/WowzaStreamingEngine
 ####	
 ####	###
 ####	# New Cron File
