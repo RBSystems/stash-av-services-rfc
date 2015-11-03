@@ -108,6 +108,7 @@ else
 	###
 
 ####	sed -i 's/192.168.0.99/$IP/' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
+####	sed -i 's/valt_recordings/dustin_recordings/' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
 ####	sed -i 's/192.168.0.99/$IP/' /var/www/dustin/web/wowza_conf/url
 ####	
 ####	#sed -i 's/http/https/' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
