@@ -1,7 +1,6 @@
 #!/bin/bash
 export patchDir="/home/ivsadmin/Install1022";
 export patchZip="/home/ivsadmin/Install1022.zip";
-export counter=0;
 export IP=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`;
 
 #if [ ! -d $patchDir ]; then
@@ -40,7 +39,7 @@ export IP=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | aw
 	###
 	# Stop Services
 	###
-	#$counter=0;
+	export counter=0;
 
 	if [ $(ps -ef | grep -v grep | grep "WowzaStreamingEngine" | wc -l) -gt 0 ]; then
 		if [ $counter -eq 10 ]; then
@@ -52,18 +51,17 @@ export IP=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | aw
 		sleep 2;
 	fi
 
-	#$counter=0;
-#
-#	#while [ pgrep apache2]
-#	#do
-#	#	if [ counter -eq 10 ]; then
-#	#		echo "Cannot stop apache2 service. Exiting...";
-#	#		exit 1;
-#	#	fi
-#	#	service apache2 stop;
-#	#	counter++;
-#	#	sleep 5;
-	#done
+	export counter=0;
+
+	if [ $(ps -ef | grep -v grep | grep "apache2" | wc -l) -gt 0 ]; then
+		if [ $counter -eq 10 ]; then
+			echo "Cannot stop apache2 service. Exiting...";
+			exit 1;
+		fi
+		service apache2 stop;
+		$counter=$counter+1;
+		sleep 2;
+	done
 
 ####	###
 ####	# Apply Patch
