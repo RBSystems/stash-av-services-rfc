@@ -1,11 +1,11 @@
 #!/bin/bash
-export patchDir="/home/ivsadmin/Install1022";
-export patchZip="/home/ivsadmin/Install1022.zip";
+export patchDir="/home/ivsadmin/RFC0005385/Install1022";
+export patchZip="/home/ivsadmin/RFC0005385/Install1022.zip";
 export IP=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`;
 
 #if [ ! -d $patchDir ]; then
 #	if [ -f $patchZip ]; then
-#		tar -xvf $patchZip
+#		unzip $patchZip -d $patchDir
 #	else
 #		if [ -f ".\Install1022.zip" ]; then
 #			cp -fR ".\Install1022.zip" $patchZip
