@@ -106,41 +106,62 @@ else
 	###
 	# Replace protocol & IP in wowza settings
 	###
+	sudo sed -i 's/192.168.0.99/$IP/' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
+	sudo sed -i 's/valt_recordings/dustin_recordings/' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
+	sudo sed -i 's/http:/https:/' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
+	if [ ! grep $IP /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml ]; then
+		echo "File edits failed. Verify /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml"
+		exit 1
+	fi
 
-####	sed -i 's/192.168.0.99/$IP/' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
-####	sed -i 's/valt_recordings/dustin_recordings/' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
-####	sed -i 's/192.168.0.99/$IP/' /var/www/dustin/web/wowza_conf/url
-####	sed -i 's/localhost/$IP/' /var/www/dustin/web/wowza_conf/url
-####	sed -i 's/http:/https:/' /var/www/dustin/web/wowza_conf/url
-####	
-####	#sed -i 's/http/https/' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
-####	
-####	
-####	sudo -s
-####	cd /var/www/v3
-####	sh assets.sh
-####	service WowzaStreamingEngine restart
-####
-####	###
-####	# Verify
-####	###
-####
-####	while [ ! pgrep WowzaStreamingEngine -a $counter -le 3 ];
-####	do
-####		sudo service WowzaStreamingEngine stop
-####		sudo service WowzaStreamingEngine start
-####		counter++
-####		sleep 10
-####	done
-####
-####	### Failure
-####	if [! pgrep WowzaStreamingEngine ];
-####		then
-####		echo "PATCH FAILED! ROLLBACK INITIATED";
-####		sh Rollback_RFC0005385.sh & ;
-####	else
-####	### Success
-####		echo "PATCH APPLIED SUCCESSFULLY";
-####	fi
+	if [ ! grep dustin_recordings /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml ]; then
+		echo "File edits failed. Verify /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml"
+		exit 1
+	fi
+
+	if [ ! grep https /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml ]; then
+		echo "File edits failed. Verify /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml"
+		exit 1
+	fi
+
+	sudo sed -i 's/192.168.0.99/$IP/' /var/www/dustin/web/wowza_conf/url
+	sudo sed -i 's/localhost/$IP/' /var/www/dustin/web/wowza_conf/url
+	sudo sed -i 's/http:/https:/' /var/www/dustin/web/wowza_conf/url
+	if [ ! grep $IP /var/www/dustin/web/wowza_conf/url ]; then
+		echo "File edits failed. Verify /var/www/dustin/web/wowza_conf/url"
+		exit 1
+	fi
+
+	if [ ! grep https /var/www/dustin/web/wowza_conf/url ]; then
+		echo "File edits failed. Verify /var/www/dustin/web/wowza_conf/url"
+		exit 1
+	fi
+	####	
+
+	cd /var/www/v3
+	sudo sh assets.sh
+	sudo service WowzaStreamingEngine restart
+
+	###
+	# Verify
+	###
+
+	while [ ! pgrep WowzaStreamingEngine];
+	do
+		sudo service WowzaStreamingEngine stop
+		sudo service WowzaStreamingEngine start
+		counter++
+		sleep 10
+	done
+
+	### Failure
+	if [! pgrep WowzaStreamingEngine ];
+		then
+		echo "PATCH FAILED! ROLLBACK INITIATED";
+		sh Rollback_RFC0005385.sh & ;
+	else
+	### Success
+		echo "PATCH APPLIED SUCCESSFULLY";
+	fi
 fi
 
