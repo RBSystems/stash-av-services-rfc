@@ -1,6 +1,4 @@
 #!/bin/bash
-sudo -s
-
 export patchDir="/home/ivsadmin/Install1022";
 export patchZip="/home/ivsadmin/Install1022.zip";
 export counter=0;
@@ -22,32 +20,50 @@ export IP=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | aw
 	###
 	# Backups
 	###
-	if [ ! -d /home/ivsadmin/ ]; then 
+	if [ ! -d /home/ivsadmin ]; then 
 		mkdir /home/ivsadmin/RFC0005385;
 	fi
+
 	if [ ! -d /home/ivsadmin/RFC0005385/apache ]; then
 		mkdir /home/ivsadmin/RFC0005385/apache;
 	fi
+	
 	if [ ! -d /home/ivsadmin/RFC0005385/wowza ]; then
 		mkdir /home/ivsadmin/RFC0005385/wowza;
 	fi
 
-	cp -fR /var/www/tools /home/ivsadmin/RFC0005385/apache/tools
-	cp -fR /var/www/v3 /home/ivsadmin/RFC0005385/apache/tools/v3
-	cp -fR /usr/local/WowzaStreamingEngine/conf/* /home/ivsadmin/RFC0005385/wowza
-	crontab -l > /home/ivsadmin/RFC0005385/crontab.bak
+	cp -fR /var/www/tools /home/ivsadmin/RFC0005385/apache/tools;
+	cp -fR /var/www/v3 /home/ivsadmin/RFC0005385/apache/tools/v3;
+	cp -fR /usr/local/WowzaStreamingEngine/conf/* /home/ivsadmin/RFC0005385/wowza;
+	crontab -l > /home/ivsadmin/RFC0005385/crontab.bak;
 
 	###
 	# Stop Services
 	###
-	$counter=0;
-	while [ pgrep WowzaStreamingEngine -a pgrep apache2 -a $counter -ge 3 ];
-	do
-		sudo service WowzaStreamingEngine stop
-		sudo service apache2 stop
-		counter++
-		sleep 2
-	done
+	#$counter=0;
+
+	if [ $(ps -ef | grep -v grep | grep "WowzaStreamingEngine" | wc -l) -gt 0 ]; then
+		if [ $counter -eq 10 ]; then
+			echo "Cannot stop WowzaStreamingEngine service. Exiting...";
+			exit 1;
+		fi
+		service WowzaStreamingEngine stop;
+		$counter=$counter+1;
+		sleep 2;
+	fi
+
+	#$counter=0;
+#
+#	#while [ pgrep apache2]
+#	#do
+#	#	if [ counter -eq 10 ]; then
+#	#		echo "Cannot stop apache2 service. Exiting...";
+#	#		exit 1;
+#	#	fi
+#	#	service apache2 stop;
+#	#	counter++;
+#	#	sleep 5;
+	#done
 
 ####	###
 ####	# Apply Patch
