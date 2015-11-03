@@ -140,12 +140,12 @@ else
 	fi
 	####	
 
-	while [ ! pgrep apache2 ];
-	do
-		sudo service apache2 stop
+	#while [ ! pgrep apache2 ];
+	#do
+	#	sudo service apache2 stop
 		sudo service apache2 start
-		sleep 5
-	done
+	#	sleep 5
+	#done
 
 	cd /var/www/v3
 	sudo sh assets.sh
@@ -155,21 +155,21 @@ else
 	# Verify
 	###
 
-	while [ ! pgrep WowzaStreamingEngine];
-	do
+	#while [ ! pgrep WowzaStreamingEngine];
+	#do
 		sudo service WowzaStreamingEngine stop
 		sudo service WowzaStreamingEngine start
-		sleep 10
-	done
+	#	sleep 10
+	#done
 
 	### Failure
-	if [ ! pgrep WowzaStreamingEngine ];
-		then
-		echo "PATCH FAILED! ROLLBACK INITIATED";
-		##sh Rollback_RFC0005385.sh & ;
-	else
-	### Success
-		echo "PATCH APPLIED SUCCESSFULLY";
-	fi
+	#if [ ! pgrep WowzaStreamingEngine ];
+	#	then
+	#	echo "PATCH FAILED! ROLLBACK INITIATED";
+	#	##sh Rollback_RFC0005385.sh & ;
+	#else
+	#### Success
+	#	echo "PATCH APPLIED SUCCESSFULLY";
+	#fi
 fi
 
