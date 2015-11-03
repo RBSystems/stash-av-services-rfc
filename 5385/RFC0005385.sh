@@ -155,10 +155,10 @@ else
 	done
 
 	### Failure
-	if [! pgrep WowzaStreamingEngine ];
+	if [ ! pgrep WowzaStreamingEngine ];
 		then
 		echo "PATCH FAILED! ROLLBACK INITIATED";
-		sh Rollback_RFC0005385.sh & ;
+		##sh Rollback_RFC0005385.sh & ;
 	else
 	### Success
 		echo "PATCH APPLIED SUCCESSFULLY";
