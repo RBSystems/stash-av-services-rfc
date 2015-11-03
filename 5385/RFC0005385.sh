@@ -15,6 +15,7 @@ if [ ! -d $patchDir ]; then
 		fi
 	fi
 else
+	echo "Backing up current configs..."
 
 	###
 	# Backups
@@ -40,6 +41,7 @@ else
 	# Stop Services
 	###
 	export counter=0;
+	echo "Stopping services..."
 
 	if [ $(ps -ef | grep -v grep | grep "WowzaStreamingEngine" | wc -l) -gt 0 ]; then
 		if [ $counter -eq 10 ]; then
@@ -66,37 +68,45 @@ else
 	###
 	# Apply Patch
 	###
+	echo "Copying wowza files..."
 
-####	sudo cp -r ./Install1022/wowza/conf /usr/local/WowzaStreamingEngine
-####
-####	sudo cp -r ./Install1022/Install1022/wowza/lib /usr/local/WowzaStreamingEngine
-####	sudo cp -r ./Install1022/etc/php5 /etc
-####	sudo cp -r ./Install1022/etc/rc.local /etc
-####	sudo cp -r ./Install1022/v3 /var/www/
-####	sudo cp -r ./Install1022/tools /var/www/
-####
-####	sudo ln -s /var/www/v3/vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64 /usr/bin/wkhtmltopdf
-####	chmod +x /usr/bin/wkhtmltopdf
-####	cd /var/www/tools/
-####	sudo tar -xvf ffmpeg-release-64bit-static.tar.xz
-####	cd ffmpeg-2.7.2-64bit-static
-####	sudo rm /usr/bin/ffmpeg
-####	sudo ln ffmpeg /usr/bin/ffmpeg
-####	sudo cp -r ./Install1022/wowza/conf /usr/local/WowzaStreamingEngine
-####	
-####	###
-####	# New Cron File
-####	###
-####	echo "*/5 * * * * sudo php /var/www/v3/app/console recorder:outdated:delete" >> newCron
-####	echo "*/5 * * * * sudo php /var/www/v3/app/console recorder:scheduled:run" >> newCron
-####	echo "*/2 * * * * sudo php /var/www/v3/app/console recorder:unrecord:stop" >> newCron
-####	crontab newCron
-####	rm newCron
-####
-####	###
-####	# Replace protocol & IP in wowza settings
-####	###
-####
+	sudo cp -r ./Install1022/wowza/conf /usr/local/WowzaStreamingEngine
+
+	sudo cp -r ./Install1022/Install1022/wowza/lib /usr/local/WowzaStreamingEngine
+
+	echo "Copying php and apache files..."
+	sudo cp -r ./Install1022/etc/php5 /etc
+	sudo cp -r ./Install1022/etc/rc.local /etc
+	sudo cp -r ./Install1022/v3 /var/www/
+	sudo cp -r ./Install1022/tools /var/www/
+
+	sudo ln -s /var/www/v3/vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64 /usr/bin/wkhtmltopdf
+	chmod +x /usr/bin/wkhtmltopdf
+
+	echo "Updating ffmpeg..."
+	cd /var/www/tools/
+	sudo tar -xvf ffmpeg-release-64bit-static.tar.xz
+	cd ffmpeg-2.7.2-64bit-static
+	sudo rm /usr/bin/ffmpeg
+	sudo ln ffmpeg /usr/bin/ffmpeg
+
+	echo "Updating base wowza conf..."
+	sudo cp -r ./Install1022/wowza/conf /usr/local/WowzaStreamingEngine
+	
+	###
+	# New Cron File
+	###
+	echo "Creating new crontab..."
+	echo "*/5 * * * * sudo php /var/www/v3/app/console recorder:outdated:delete" >> newCron
+	echo "*/5 * * * * sudo php /var/www/v3/app/console recorder:scheduled:run" >> newCron
+	echo "*/2 * * * * sudo php /var/www/v3/app/console recorder:unrecord:stop" >> newCron
+	crontab newCron
+	rm newCron
+
+	###
+	# Replace protocol & IP in wowza settings
+	###
+
 ####	sed -i 's/192.168.0.99/$IP/' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
 ####	sed -i 's/192.168.0.99/$IP/' /var/www/dustin/web/wowza_conf/url
 ####	
