@@ -5,8 +5,7 @@ export IP=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | aw
 
 if [ ! -d $patchDir ]; then
 	if [ -f $patchZip ]; then
-		unzip $patchZip -d $patchDir
-		sleep 20
+		unzip $patchZip -d $patchDir && ls
 	else
 		if [ -f ".\Install1022.zip" ]; then
 			cp -fR ".\Install1022.zip" $patchZip
