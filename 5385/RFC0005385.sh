@@ -5,7 +5,7 @@ export patchZip="/home/ivsadmin/RFC0005385/Install1022.zip";
 
 if [ ! -d $patchDir ]; then
 	if [ -f $patchZip ]; then
-		unzip $patchZip && ls
+		unzip $patchZip && ls && echo "Restart script..."
 	else
 		if [ -f ".\Install1022.zip" ]; then
 			cp -fR ".\Install1022.zip" $patchZip
@@ -49,7 +49,7 @@ else
 			exit 1;
 		fi
 		service WowzaStreamingEngine stop;
-		$counter=$counter+1;
+		$counter+=1;
 		sleep 2;
 	fi
 
@@ -61,7 +61,7 @@ else
 			exit 1;
 		fi
 		service apache2 stop;
-		$counter=$counter+1;
+		$counter+=1;
 		sleep 2;
 	fi
 
@@ -70,15 +70,15 @@ else
 	###
 	echo "Copying wowza files..."
 
-	sudo cp -r ./Install1022/wowza/conf /usr/local/WowzaStreamingEngine
+	sudo cp -fr Install1022/wowza/conf /usr/local/WowzaStreamingEngine
 
-	sudo cp -r ./Install1022/Install1022/wowza/lib /usr/local/WowzaStreamingEngine
+	sudo cp -fr Install1022/wowza/lib /usr/local/WowzaStreamingEngine
 
 	echo "Copying php and apache files..."
-	sudo cp -r ./Install1022/etc/php5 /etc
-	sudo cp -r ./Install1022/etc/rc.local /etc
-	sudo cp -r ./Install1022/v3 /var/www/
-	sudo cp -r ./Install1022/tools /var/www/
+	sudo cp -fr Install1022/etc/php5 /etc
+	sudo cp -fr Install1022/etc/rc.local /etc
+	sudo cp -fr Install1022/v3 /var/www/
+	sudo cp -fr Install1022/tools /var/www/
 
 	sudo ln -s /var/www/v3/vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64 /usr/bin/wkhtmltopdf
 	chmod +x /usr/bin/wkhtmltopdf
@@ -112,18 +112,18 @@ else
 	sudo sed -i 's/valt_recordings/dustin_recordings/' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
 	sudo sed -i 's/http:/https:/' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
 	if [ ! grep $IP /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml ]; then
-		echo "File edits failed. Verify /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml"
-		exit 1
+		echo "File edits failed. Verify /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml";
+		exit 1;
 	fi
 
 	if [ ! grep dustin_recordings /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml ]; then
-		echo "File edits failed. Verify /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml"
-		exit 1
+		echo "File edits failed. Verify /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml";
+		exit 1;
 	fi
 
 	if [ ! grep https /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml ]; then
-		echo "File edits failed. Verify /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml"
-		exit 1
+		echo "File edits failed. Verify /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml";
+		exit 1;
 	fi
 
 	sudo sed -i 's/192.168.0.99/$IP/' /var/www/dustin/web/wowza_conf/url
