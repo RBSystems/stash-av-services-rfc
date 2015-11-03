@@ -140,6 +140,13 @@ else
 	fi
 	####	
 
+	while [ ! pgrep apache2 ];
+	do
+		sudo service apache2 stop
+		sudo service apache2 start
+		sleep 5
+	done
+
 	cd /var/www/v3
 	sudo sh assets.sh
 	sudo service WowzaStreamingEngine restart
@@ -152,7 +159,6 @@ else
 	do
 		sudo service WowzaStreamingEngine stop
 		sudo service WowzaStreamingEngine start
-		counter++
 		sleep 10
 	done
 
