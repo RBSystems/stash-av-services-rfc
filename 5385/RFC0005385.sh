@@ -1,4 +1,9 @@
 #!/bin/bash
+#############
+# Author: Dan Clegg
+# Date: 4 Nov 2015
+#############
+
 export patchDir="/home/ivsadmin/RFC0005385/Install1022";
 export patchZip="/home/ivsadmin/RFC0005385/Install1022.zip";
 #export IP=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`;
