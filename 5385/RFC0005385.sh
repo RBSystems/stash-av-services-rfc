@@ -113,7 +113,7 @@ else
 	###
 	export IP=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`;
 
-	sudo sed -i 's/192.168.0.99/$IP/' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
+	sudo sed -i "s/192.168.0.99/$IP/" /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
 	sudo sed -i 's/valt_recordings/dustin_recordings/' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
 	sudo sed -i 's/http:/https:/' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
 	if [ ! grep $IP /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml ]; then
@@ -131,8 +131,8 @@ else
 		exit 1;
 	fi
 
-	sudo sed -i 's/192.168.0.99/$IP/' /var/www/dustin/web/wowza_conf/url
-	sudo sed -i 's/localhost/$IP/' /var/www/dustin/web/wowza_conf/url
+	sudo sed -i "s/192.168.0.99/$IP/" /var/www/dustin/web/wowza_conf/url
+	sudo sed -i "s/localhost/$IP/" /var/www/dustin/web/wowza_conf/url
 	sudo sed -i 's/http:/https:/' /var/www/dustin/web/wowza_conf/url
 	if [ ! grep $IP /var/www/dustin/web/wowza_conf/url ]; then
 		echo "File edits failed. Verify /var/www/dustin/web/wowza_conf/url"

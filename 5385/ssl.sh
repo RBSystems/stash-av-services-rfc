@@ -60,29 +60,29 @@ sudo sed -i 's/apache.crt/DigiCertCA.crt/1' /var/www/v3/nodejs/server.js
 ###
 # Enter proper ip address into wowza config
 ###
-sudo sed -i 's/http:\/\/localhost/https:\/\/'"$IP"'/' /var/www/dustin/web/wowza_conf/url
+sudo sed -i "s/http:\/\/localhost/https:\/\/$IP/" /var/www/dustin/web/wowza_conf/url
 
 ###
 # Enter https version of url in Wowza config
 ###
 sudo -s
 sudo sed -i 's/http:\/\//https:\/\//' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
-sudo sed -i 's/192.168.0.99/'"$IP"'/' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
+sudo sed -i "s/192.168.0.99/$IP/" /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
 sudo sed -i 's/valt_recordings/dustin_recordings/' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
 
 ###
 # Modify the v3.conf file
 ###
-sudo sed -i 's/192.*:443/'"$IP"':443/' /etc/apache2/sites-enabled/v3.conf
-sudo sed -i 's/ServerName.*/ServerName '"$host"'/1' /etc/apache2/sites-enabled/v3.conf
-sudo sed -i 's/ServerName.*/ServerName '"$host"''"$(printf '\r\t\t')"' ServerAlias *.byu.edu/2' /etc/apache2/sites-enabled/v3.conf
+sudo sed -i "s/192.*:443/$IP:443/" /etc/apache2/sites-enabled/v3.conf
+sudo sed -i "s/ServerName.*/ServerName $host/1" /etc/apache2/sites-enabled/v3.conf
+sudo sed -i "s/ServerName.*/ServerName $host $(printf '\r\t\t')/ ServerAlias *.byu.edu/2" /etc/apache2/sites-enabled/v3.conf
 sudo sed -i 's/apache.crt/star_byu_edu.crt/' /etc/apache2/sites-enabled/v3.conf
 sudo sed -i 's/apache.key/IVS-510626065001.key/' /etc/apache2/sites-enabled/v3.conf
 
 ###
 # Modify the default-ssl.conf file
 ###
-sudo sed -i 's/192.168.0.99/'"$IP"'/' /etc/apache2/sites-enabled/default-ssl.conf
+sudo sed -i "s/192.168.0.99/$IP/" /etc/apache2/sites-enabled/default-ssl.conf
 sudo sed -i 's/apache.crt/star_byu_edu.crt/' /etc/apache2/sites-enabled/default-ssl.conf
 sudo sed -i 's/apache.key/IVS-510626065001.key/' /etc/apache2/sites-enabled/default-ssl.conf
 
