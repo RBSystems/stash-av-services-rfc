@@ -6,6 +6,7 @@
 
 export patchDir="/home/ivsadmin/RFC0005385/Install1022";
 export patchZip="/home/ivsadmin/RFC0005385/Install1022.zip";
+###!!!! Handle cases of non-primary servers' config files, getting server role from cli arguments 
 #export IP=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`;
 
 if [ ! -d $patchDir ]; then
@@ -39,8 +40,8 @@ else
 
 	cp -fR /var/www/tools /home/ivsadmin/RFC0005385/apache/tools;
 	cp -fR /var/www/v3 /home/ivsadmin/RFC0005385/apache/tools/v3;
-	cp -fR /usr/local/WowzaStreamingEngine/conf/* /home/ivsadmin/RFC0005385/wowza;
-	crontab -l > /home/ivsadmin/RFC0005385/crontab.bak;
+	sudo cp -fR /usr/local/WowzaStreamingEngine/conf/* /home/ivsadmin/RFC0005385/wowza;
+	sudo crontab -l > /home/ivsadmin/RFC0005385/crontab.bak;
 
 	###
 	# Stop Services
@@ -53,7 +54,7 @@ else
 			echo "Cannot stop WowzaStreamingEngine service. Exiting...";
 			exit 1;
 		fi
-		service WowzaStreamingEngine stop;
+		sudo service WowzaStreamingEngine stop;
 		$counter+=1;
 		sleep 2;
 	fi
@@ -65,7 +66,7 @@ else
 			echo "Cannot stop apache2 service. Exiting...";
 			exit 1;
 		fi
-		service apache2 stop;
+		sudo service apache2 stop;
 		$counter+=1;
 		sleep 2;
 	fi
@@ -75,18 +76,18 @@ else
 	###
 	echo "Copying wowza files..."
 
-	sudo cp -fr Install1022/wowza/conf /usr/local/WowzaStreamingEngine
+	sudo cp -fR Install1022/wowza/conf /usr/local/WowzaStreamingEngine
 
-	sudo cp -fr Install1022/wowza/lib /usr/local/WowzaStreamingEngine
+	sudo cp -fR Install1022/wowza/lib /usr/local/WowzaStreamingEngine
 
 	echo "Copying php and apache files..."
-	sudo cp -fr Install1022/etc/php5 /etc
-	sudo cp -fr Install1022/etc/rc.local /etc
-	sudo cp -fr Install1022/v3 /var/www/
-	sudo cp -fr Install1022/tools /var/www/
+	sudo cp -fR Install1022/etc/php5 /etc
+	sudo cp -fR Install1022/etc/rc.local /etc
+	sudo cp -fR Install1022/v3 /var/www/
+	sudo cp -fR Install1022/tools /var/www/
 
 	sudo ln -s /var/www/v3/vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64 /usr/bin/wkhtmltopdf
-	chmod +x /usr/bin/wkhtmltopdf
+	sudo chmod +x /usr/bin/wkhtmltopdf
 
 	echo "Updating ffmpeg..."
 	cd /var/www/tools/
@@ -96,12 +97,19 @@ else
 	sudo ln ffmpeg /usr/bin/ffmpeg
 
 	echo "Updating base wowza conf..."
-	sudo cp -r ./Install1022/wowza/conf /usr/local/WowzaStreamingEngine
+	cd $patchDir 
+	sudo cp -r ./wowza/conf /usr/local/WowzaStreamingEngine
 	
 	###
 	# New Cron File
 	###
 	echo "Creating new crontab..."
+	sudo echo "*/5 * * * * sudo php /var/www/v3/app/console recorder:outdated:delete" >> newCron
+	sudo echo "*/5 * * * * sudo php /var/www/v3/app/console recorder:scheduled:run" >> newCron
+	sudo echo "*/2 * * * * sudo php /var/www/v3/app/console recorder:unrecord:stop" >> newCron
+	sudo crontab newCron
+	rm newCron
+
 	echo "*/5 * * * * sudo php /var/www/v3/app/console recorder:outdated:delete" >> newCron
 	echo "*/5 * * * * sudo php /var/www/v3/app/console recorder:scheduled:run" >> newCron
 	echo "*/2 * * * * sudo php /var/www/v3/app/console recorder:unrecord:stop" >> newCron
@@ -111,11 +119,12 @@ else
 	###
 	# Replace protocol & IP in wowza settings
 	###
-	export IP=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`;
 
-	sudo sed -i "s/192.168.0.99/$IP/" /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
-	sudo sed -i 's/valt_recordings/dustin_recordings/' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
-	sudo sed -i 's/http:/https:/' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
+	sudo -s
+	export IP=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`;
+	sed -i "s/192.168.0.99/$IP/" /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
+	sed -i 's/valt_recordings/dustin_recordings/' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
+	sed -i 's/http:/https:/' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
 	if [ ! grep $IP /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml ]; then
 		echo "File edits failed. Verify /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml";
 		exit 1;
@@ -144,7 +153,6 @@ else
 		exit 1
 	fi
 	####	
-
 	#while [ ! pgrep apache2 ];
 	#do
 	#	sudo service apache2 stop
@@ -153,7 +161,15 @@ else
 	#done
 
 	cd /var/www/v3
+	chmod a+x assets.sh
+	chmod a+x nodejs/RUN
+	chmod a+x nodejs/STOP
+	
 	sudo sh assets.sh
+	cd nodejs
+	sudo sh STOP
+	sudo sh STOP
+	sudo sh RUN
 	sudo service WowzaStreamingEngine restart
 
 	###
@@ -178,3 +194,4 @@ else
 	#fi
 fi
 
+sh ssl.sh

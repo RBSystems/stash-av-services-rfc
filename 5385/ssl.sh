@@ -52,10 +52,10 @@ sudo cp /var/www/dustin/web/wowza_conf/url /var/www/dustin/web/wowza_conf/url.no
 ###
 # Replace nodejs certs
 ###
-sudo nano /var/www/v3/nodejs/server.js 
-sudo sed -i 's/apache.key/IVS-510626065001.key/' /var/www/v3/nodejs/server.js
-sudo sed -i 's/apache.crt/star_byu_edu.crt/1' /var/www/v3/nodejs/server.js
-sudo sed -i 's/apache.crt/DigiCertCA.crt/1' /var/www/v3/nodejs/server.js
+sudo sed -i 's/<key>.key/IVS-510626065001.key/' /var/www/v3/nodejs/server.js
+sudo sed -i 's/<cert>.cer/star_byu_edu.crt/' /var/www/v3/nodejs/server.js
+sudo sed -i 's/<ca>.cer/DigiCertCA.crt/' /var/www/v3/nodejs/server.js
+sudo sed -i 's/etc\/ssl\/crt/etc\/apache2\/ssl/' /var/www/v3/nodejs/server.js
 
 ###
 # Enter proper ip address into wowza config
@@ -66,6 +66,8 @@ sudo sed -i "s/http:\/\/localhost/https:\/\/$IP/" /var/www/dustin/web/wowza_conf
 # Enter https version of url in Wowza config
 ###
 sudo -s
+export IP=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`;
+export host=$(hostname -f)
 sudo sed -i 's/http:\/\//https:\/\//' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
 sudo sed -i "s/192.168.0.99/$IP/" /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
 sudo sed -i 's/valt_recordings/dustin_recordings/' /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml
@@ -75,14 +77,15 @@ sudo sed -i 's/valt_recordings/dustin_recordings/' /usr/local/WowzaStreamingEngi
 ###
 sudo sed -i "s/192.*:443/$IP:443/" /etc/apache2/sites-enabled/v3.conf
 sudo sed -i "s/ServerName.*/ServerName $host/1" /etc/apache2/sites-enabled/v3.conf
-sudo sed -i "s/ServerName.*/ServerName $host $(printf '\r\t\t')/ ServerAlias *.byu.edu/2" /etc/apache2/sites-enabled/v3.conf
+#!!! ServerAlias not going in
+##sudo sed -i "s/ServerName.*/ServerName $host $(printf '\r\t\t')/ ServerAlias *.byu.edu/2" /etc/apache2/sites-enabled/v3.conf
 sudo sed -i 's/apache.crt/star_byu_edu.crt/' /etc/apache2/sites-enabled/v3.conf
 sudo sed -i 's/apache.key/IVS-510626065001.key/' /etc/apache2/sites-enabled/v3.conf
 
 ###
 # Modify the default-ssl.conf file
 ###
-sudo sed -i "s/192.168.0.99/$IP/" /etc/apache2/sites-enabled/default-ssl.conf
+sudo sed -i "s/192.*:443/$IP:443/" /etc/apache2/sites-enabled/default-ssl.conf
 sudo sed -i 's/apache.crt/star_byu_edu.crt/' /etc/apache2/sites-enabled/default-ssl.conf
 sudo sed -i 's/apache.key/IVS-510626065001.key/' /etc/apache2/sites-enabled/default-ssl.conf
 
