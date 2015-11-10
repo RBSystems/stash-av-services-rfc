@@ -1,0 +1,8 @@
+mkdir RFC0005385
+cd RFC0005385/
+cp /etc/apache2/sites-enabled/v3.* .
+cp /etc/apache2/sites-enabled/default-ssl.conf .
+cp -fR /var/www/v3/ ./v3
+cp -fR /var/www/dustin/ ./dustin
+sudo -s
+cp /usr/local/WowzaStreamingEngine/conf/dustin/Application.xml .
