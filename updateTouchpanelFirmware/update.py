@@ -1,11 +1,11 @@
-#Python 2.7.6
+#!/usr/bin/env python
 #update.py
 
 import requests
 import json
 
 host='192.168.99.100'
-port='32777'
+port='32781'
 
 url = 'http://{0}:{1}/devices/touchpanel/_search'.format(host,port)
 resp = requests.get(url)
@@ -20,9 +20,9 @@ if(resp.ok):
     jData = json.loads(resp.content)
     numPanels = jData['hits']['total']
     if(numPanels > 0):
-    	print numPanels
+    	print(numPanels)
     else:
-    	print "Zilcho"
+    	print("Zilcho")
     #print jData['hits']['hits'][0]['_source']['IP']
 else:
   # If response code is not ok (200), print the resulting http error code with description
